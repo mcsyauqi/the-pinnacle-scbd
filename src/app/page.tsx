@@ -117,7 +117,7 @@ const amenities = [
   {
     title: "Infinity Pool",
     description: "A 50-meter sky-edge infinity pool on the 45th floor, overlooking Jakarta's endless horizon.",
-    image: "https://images.unsplash.com/photo-1572331165267-854da2b021b1?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
   },
   {
     title: "Zen Garden",
@@ -185,7 +185,7 @@ const galleryImages = [
     subtitle: "Sky-level luxury",
   },
   {
-    src: "https://images.unsplash.com/photo-1572331165267-854da2b021b1?w=800&q=80",
+    src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
     title: "Infinity Pool",
     subtitle: "45th floor oasis",
   },
