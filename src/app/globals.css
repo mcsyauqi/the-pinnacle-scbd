@@ -127,3 +127,47 @@ h1, h2, h3, h4, h5, h6 {
 .font-mono-numbers {
   font-family: var(--font-jetbrains), monospace;
 }
+
+/* ─── CSS-only animations (replacing framer-motion) ─── */
+
+/* Floating orb animations for hero background */
+@keyframes orb1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.1); }
+  50% { transform: translate(-20px, 30px) scale(0.95); }
+  75% { transform: translate(10px, -10px) scale(1.05); }
+}
+
+@keyframes orb2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-30px, 20px) scale(0.95); }
+  50% { transform: translate(20px, -30px) scale(1.1); }
+  75% { transform: translate(-10px, 10px) scale(1.02); }
+}
+
+.animate-orb-1 {
+  animation: orb1 15s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: orb2 18s ease-in-out infinite;
+}
+
+/* Scroll indicator bounce */
+@keyframes scrollHint {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes scrollDot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.animate-scroll-hint {
+  animation: scrollHint 3s ease-in-out infinite;
+}
+
+.animate-scroll-dot {
+  animation: scrollDot 2s ease-in-out infinite;
+}
