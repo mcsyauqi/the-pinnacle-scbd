@@ -1,49 +1,86 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 /* ───────────────────────────────────────────
    DATA
    ─────────────────────────────────────────── */
 
 const navLinks = [
-  { label: "Overview", href: "#overview" },
+  { label: "About", href: "#about" },
   { label: "Units", href: "#units" },
   { label: "Amenities", href: "#amenities" },
-  { label: "Technology", href: "#technology" },
+  { label: "Location", href: "#location" },
   { label: "Gallery", href: "#gallery" },
+  { label: "Contact", href: "#contact" },
 ];
 
 const stats = [
-  { number: "58", label: "Floors", description: "Rising above the Jakarta skyline" },
-  { number: "180", label: "Units", description: "Exclusive residences designed for distinction" },
-  { number: "4", label: "Sky Gardens", description: "Elevated green sanctuaries in the clouds" },
-  { number: "LEED", label: "Platinum", description: "Highest standard in sustainable design" },
+  { number: "58", suffix: "", label: "Floors" },
+  { number: "180", suffix: "+", label: "Exclusive Units" },
+  { number: "4", suffix: "", label: "Sky Gardens" },
+  { number: "24", suffix: "/7", label: "Concierge" },
 ];
 
-interface UnitZone {
-  id: string;
+const features = [
+  {
+    icon: "M3 21V5a2 2 0 012-2h6l2 2h6a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2z",
+    title: "LEED Platinum Certified",
+    description:
+      "Highest standard in green building design, with advanced energy-efficient systems and sustainable materials throughout.",
+  },
+  {
+    icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+    title: "AI-Powered Smart Home",
+    description:
+      "Integrated smart home system with AI-driven climate control, lighting scenes, security, and voice-activated concierge.",
+  },
+  {
+    icon: "M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17",
+    title: "Triple-Height Lobbies",
+    description:
+      "Dramatic entrance lobbies soaring 12 meters high, adorned with curated art installations and bespoke furnishings.",
+  },
+  {
+    icon: "M13 10V3L4 14h7v7l9-11h-7z",
+    title: "Seismic Zone IV Ready",
+    description:
+      "Engineered to the highest seismic safety standards with advanced base isolation and damping technology.",
+  },
+  {
+    icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
+    title: "Wellness Ecosystem",
+    description:
+      "Dedicated wellness floors featuring meditation gardens, yoga studios, spa suites, and a state-of-the-art medical center.",
+  },
+  {
+    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064",
+    title: "Biophilic Design",
+    description:
+      "Living walls, rooftop gardens, and integrated greenery throughout creating a sanctuary above the city skyline.",
+  },
+];
+
+interface UnitType {
   name: string;
   floors: string;
-  color: string;
-  gradient: string;
   size: string;
   bedrooms: string;
   price: string;
+  highlight: string;
   features: string[];
+  accentColor: string;
   image: string;
 }
 
-const zones: UnitZone[] = [
+const unitTypes: UnitType[] = [
   {
-    id: "sky",
     name: "Sky Penthouses",
-    floors: "Floor 50-58",
-    color: "#A78BFA",
-    gradient: "from-violet-500 to-purple-600",
+    floors: "Floor 50 - 58",
     size: "280 - 450 m\u00B2",
     bedrooms: "3 - 4 Bedrooms",
     price: "From Rp 35B",
+    highlight: "The Crown Jewel",
     features: [
       "Private elevator access",
       "360\u00B0 panoramic terrace",
@@ -52,1124 +89,941 @@ const zones: UnitZone[] = [
       "Wine cellar & cigar room",
       "Dedicated concierge",
     ],
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+    accentColor: "#A78BFA",
+    image:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
   },
   {
-    id: "premium",
     name: "Premium Suites",
-    floors: "Floor 30-49",
-    color: "#38BDF8",
-    gradient: "from-cyan-400 to-blue-500",
-    size: "180 - 280 m\u00B2",
+    floors: "Floor 30 - 49",
+    size: "150 - 220 m\u00B2",
     bedrooms: "2 - 3 Bedrooms",
-    price: "From Rp 15B",
+    price: "From Rp 18B",
+    highlight: "Elevated Living",
     features: [
       "Floor-to-ceiling windows",
-      "Sky garden access",
+      "Private balcony garden",
+      "Smart climate control",
+      "Built-in entertainment system",
       "Marble & oak finishes",
-      "Integrated smart system",
-      "Private lounge access",
-      "Valet parking",
+      "Dedicated parking",
     ],
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+    accentColor: "#38BDF8",
+    image:
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
   },
   {
-    id: "executive",
-    name: "Executive Units",
-    floors: "Floor 15-29",
-    color: "#3B82F6",
-    gradient: "from-blue-500 to-indigo-600",
-    size: "120 - 180 m\u00B2",
-    bedrooms: "2 Bedrooms",
-    price: "From Rp 8B",
-    features: [
-      "Open-plan living area",
-      "Premium appliances",
-      "Gym & pool access",
-      "Smart lock & intercom",
-      "City view balcony",
-      "Co-working space access",
-    ],
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
-  },
-  {
-    id: "garden",
-    name: "Garden Units",
-    floors: "Floor 3-14",
-    color: "#2DD4BF",
-    gradient: "from-teal-400 to-emerald-500",
-    size: "80 - 120 m\u00B2",
+    name: "Executive Residences",
+    floors: "Floor 10 - 29",
+    size: "90 - 140 m\u00B2",
     bedrooms: "1 - 2 Bedrooms",
-    price: "From Rp 5B",
+    price: "From Rp 8B",
+    highlight: "Smart & Refined",
     features: [
-      "Garden terrace access",
-      "Landscaped courtyard",
-      "Pet-friendly zone",
-      "Smart home basics",
-      "Retail podium access",
-      "EV charging station",
+      "Open-plan living design",
+      "Integrated smart home hub",
+      "Designer kitchen suite",
+      "Rain shower bathroom",
+      "Access to sky gardens",
+      "Resident lounge privileges",
     ],
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80",
+    accentColor: "#34D399",
+    image:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
   },
 ];
 
 const amenities = [
   {
-    title: "Infinity Pool",
-    description: "A 50-meter sky-edge infinity pool on the 45th floor, overlooking Jakarta's endless horizon.",
-    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
+    name: "Infinity Sky Pool",
+    description:
+      "A stunning 25-meter infinity pool on the 55th floor with panoramic city views stretching to the horizon.",
+    icon: "M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z",
   },
   {
-    title: "Zen Garden",
-    description: "Curated Japanese-inspired sky gardens with meditation spaces and water features.",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+    name: "Executive Fitness Center",
+    description:
+      "World-class gym spanning 800m\u00B2 with Technogym equipment, personal trainers, and recovery suites.",
+    icon: "M13 10V3L4 14h7v7l9-11h-7z",
   },
   {
-    title: "Sports Complex",
-    description: "Indoor tennis court, squash, basketball court, and Olympic-grade facilities.",
-    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80",
+    name: "Sky Lounge & Bar",
+    description:
+      "Exclusive residents-only lounge on the 56th floor, perfect for entertaining with a private cocktail bar.",
+    icon: "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z",
   },
   {
-    title: "Private Dining",
-    description: "Chef's table experience with a private dining room for intimate gatherings and celebrations.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+    name: "Private Cinema",
+    description:
+      "A 32-seat private cinema with Dolby Atmos surround sound and 4K laser projection for film premieres.",
+    icon: "M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z",
   },
   {
-    title: "Fitness Center",
-    description: "State-of-the-art gym with Technogym equipment, yoga studio, and personal training suites.",
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+    name: "Meditation Garden",
+    description:
+      "Rooftop zen garden with water features, Japanese landscaping, and private meditation pods for mindful retreats.",
+    icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
   },
   {
-    title: "Automated Parking",
-    description: "Robotic valet parking system with 3-minute retrieval. 400 spaces across 5 basement levels.",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80",
-  },
-];
-
-const techFeatures = [
-  {
-    title: "Smart Home AI",
-    description: "Centralized AI system learns your preferences -- lighting, temperature, music, and security adapt to your lifestyle automatically.",
-  },
-  {
-    title: "Parametric Facade",
-    description: "Dynamic aluminum facade panels respond to sun position, reducing heat gain by 40% while creating a living exterior.",
-  },
-  {
-    title: "Triple-Pane Glass",
-    description: "German-engineered triple-glazed windows with Low-E coating for superior insulation and noise reduction to 25dB.",
-  },
-  {
-    title: "EV Charging Hub",
-    description: "120 Tesla-compatible supercharging stations across all basement levels with smart queue management.",
-  },
-  {
-    title: "Water Recycling",
-    description: "Closed-loop greywater system recycles 80% of water usage. Rainwater harvesting irrigates all sky gardens.",
-  },
-  {
-    title: "Biometric Access",
-    description: "Face recognition, fingerprint, and iris scanning at every access point. Real-time security AI monitors 200+ cameras.",
+    name: "Co-Working Space",
+    description:
+      "Fully equipped co-working hub with private meeting rooms, video conferencing suites, and high-speed fiber.",
+    icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
   },
 ];
 
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80",
-    title: "Exterior Facade",
-    subtitle: "Parametric glass design",
+    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80",
+    alt: "Luxury penthouse interior",
+    span: "col-span-2 row-span-2",
   },
   {
-    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-    title: "Penthouse Living",
-    subtitle: "Sky-level luxury",
+    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80",
+    alt: "Modern living space",
+    span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80",
-    title: "Infinity Pool",
-    subtitle: "45th floor oasis",
+    src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80",
+    alt: "Premium suite view",
+    span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
-    title: "Grand Lobby",
-    subtitle: "First impressions matter",
+    src: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&q=80",
+    alt: "Elegant bathroom",
+    span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80",
-    title: "City Skyline",
-    subtitle: "Panoramic Jakarta views",
+    src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80",
+    alt: "Sky garden terrace",
+    span: "col-span-1 row-span-2",
   },
-];
-
-const budgetRanges = ["IDR 5B - 10B", "IDR 10B - 20B", "IDR 20B - 35B", "IDR 35B - 50B+"];
-const floorZones = [
-  "Garden Units (Floor 3-14)",
-  "Executive Units (Floor 15-29)",
-  "Premium Suites (Floor 30-49)",
-  "Sky Penthouses (Floor 50-58)",
+  {
+    src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80",
+    alt: "Designer kitchen",
+    span: "col-span-1 row-span-1",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80",
+    alt: "Building exterior dusk",
+    span: "col-span-1 row-span-1",
+  },
 ];
 
 /* ───────────────────────────────────────────
-   NAVBAR
+   ICON COMPONENT
    ─────────────────────────────────────────── */
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+function Icon({
+  path,
+  size = 24,
+  className = "",
+}: {
+  path: string;
+  size?: number;
+  className?: string;
+}) {
   return (
-    <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-2xl ${
-        scrolled
-          ? "glass-strong w-[95%] max-w-6xl py-3 px-6"
-          : "glass w-[90%] max-w-5xl py-4 px-8"
-      }`}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
     >
-      <div className="flex items-center justify-between">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-600 flex items-center justify-center font-bold text-sm">
-            P
-          </div>
-          <span
-            className="text-lg font-semibold tracking-wider hidden sm:block"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            THE PINNACLE
-          </span>
-        </a>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="px-4 py-2 text-sm text-[#94A3B8] hover:text-white transition-colors rounded-lg hover:bg-white/5"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <a
-          href="#register"
-          className="hidden md:block px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white text-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          Register Interest
-        </a>
-
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          aria-label="Toggle menu"
-        >
-          <span
-            className="block w-6 h-0.5 bg-white transition-transform duration-300"
-            style={mobileOpen ? { transform: "rotate(45deg) translateY(6px)" } : undefined}
-          />
-          <span
-            className="block w-6 h-0.5 bg-white transition-opacity duration-300"
-            style={mobileOpen ? { opacity: 0 } : undefined}
-          />
-          <span
-            className="block w-6 h-0.5 bg-white transition-transform duration-300"
-            style={mobileOpen ? { transform: "rotate(-45deg) translateY(-6px)" } : undefined}
-          />
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className="md:hidden overflow-hidden transition-all duration-300"
-        style={{ maxHeight: mobileOpen ? "400px" : "0px", opacity: mobileOpen ? 1 : 0 }}
-      >
-        <div className="flex flex-col gap-1 pt-3 mt-3 border-t border-white/10">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="px-4 py-3 text-sm text-[#94A3B8] hover:text-white transition-colors rounded-lg hover:bg-white/5"
-            >
-              {link.label}
-            </a>
-          ))}
-          <a
-            href="#register"
-            onClick={() => setMobileOpen(false)}
-            className="mx-4 mt-2 mb-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white text-sm font-medium text-center"
-          >
-            Register Interest
-          </a>
-        </div>
-      </div>
-    </nav>
+      <path d={path} />
+    </svg>
   );
 }
 
 /* ───────────────────────────────────────────
-   HERO
+   SECTION HEADER
    ─────────────────────────────────────────── */
 
-function Hero() {
+function SectionHeader({
+  label,
+  title,
+  description,
+  align = "center",
+}: {
+  label: string;
+  title: string;
+  description?: string;
+  align?: "center" | "left";
+}) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80"
-          alt="The Pinnacle SCBD Tower"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[#0F172A]/80" />
-      </div>
-
-      {/* Dot grid */}
-      <div className="absolute inset-0 dot-grid opacity-30" />
-
-      {/* Gradient orbs - CSS animation only */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[120px] animate-orb-1" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[120px] animate-orb-2" />
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-sm text-[#94A3B8] tracking-wider uppercase">
-            SCBD, South Jakarta
-          </span>
-        </div>
-
-        {/* Main heading */}
-        <h1
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-none mb-6"
-          style={{ fontFamily: "var(--font-space-grotesk)" }}
+    <div
+      className={`mb-16 lg:mb-20 ${align === "center" ? "text-center" : "text-left"}`}
+    >
+      <span className="inline-block text-xs font-semibold tracking-[0.3em] uppercase text-cyan-400 mb-4">
+        {label}
+      </span>
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] mb-6">
+        <span className="gradient-text">{title}</span>
+      </h2>
+      {description && (
+        <p
+          className={`text-white/60 text-lg max-w-2xl leading-relaxed ${align === "center" ? "mx-auto" : ""}`}
         >
-          <span className="gradient-text">THE</span>
-          <br />
-          <span className="gradient-text">PINNACLE</span>
-        </h1>
-
-        {/* Tagline */}
-        <p className="text-xl sm:text-2xl text-[#94A3B8] font-light tracking-wide mb-4">
-          Elevated Living. Elevated Thinking.
+          {description}
         </p>
-
-        {/* Sub description */}
-        <p className="text-base text-[#64748B] max-w-xl mx-auto mb-12">
-          58 stories of uncompromising luxury in the heart of Jakarta&apos;s most
-          prestigious business district
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#units"
-            className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold tracking-wide overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(56,189,248,0.3)]"
-          >
-            <span className="relative z-10">Explore Units</span>
-          </a>
-          <a
-            href="#register"
-            className="px-8 py-4 rounded-2xl glass text-white font-medium tracking-wide hover:bg-white/10 transition-all duration-300 gradient-border"
-          >
-            Join Waitlist
-          </a>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="w-6 h-10 rounded-full border-2 border-[#64748B] flex items-start justify-center pt-2 animate-scroll-hint">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-scroll-dot" />
-          </div>
-        </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 }
 
 /* ───────────────────────────────────────────
-   OVERVIEW
+   MAIN PAGE COMPONENT
    ─────────────────────────────────────────── */
 
-function Overview() {
-  return (
-    <section id="overview" className="relative py-20 lg:py-28 px-6 lg:px-12">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/[0.02] to-transparent" />
+export default function PinnaclePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeUnit, setActiveUnit] = useState(0);
 
-      <div className="relative max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Text */}
-          <div>
-            <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-                About the Project
+  return (
+    <div className="min-h-screen bg-[#0A0A0F] text-white overflow-x-hidden">
+      {/* ═══════════════════════════════════════
+          NAVIGATION
+          ═══════════════════════════════════════ */}
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div className="absolute inset-0 bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-white/5" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-500 flex items-center justify-center text-white font-bold text-sm transition-transform duration-300 group-hover:scale-110">
+              TP
+            </div>
+            <div>
+              <span className="text-lg font-bold font-[family-name:var(--font-space-grotesk)] tracking-tight">
+                The Pinnacle
+              </span>
+              <span className="block text-[10px] tracking-[0.25em] text-white/40 uppercase">
+                SCBD Jakarta
               </span>
             </div>
+          </a>
 
-            <h2
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
-              style={{ fontFamily: "var(--font-space-grotesk)" }}
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-white/60 hover:text-cyan-400 transition-colors duration-300 tracking-wide"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              className="ml-4 px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-sm font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105"
             >
-              Redefining
-              <br />
-              <span className="gradient-text">Urban Living</span>
-            </h2>
-
-            <p className="text-lg text-[#94A3B8] leading-relaxed mb-6">
-              The Pinnacle SCBD stands as Jakarta&apos;s most ambitious residential
-              project -- a 58-story architectural masterpiece that seamlessly
-              blends parametric design, sustainable engineering, and
-              intelligent living systems.
-            </p>
-
-            <p className="text-base text-[#64748B] leading-relaxed mb-8">
-              Located in the heart of the Sudirman Central Business District,
-              every residence offers panoramic views of Jakarta&apos;s evolving
-              skyline, from the Menteng canopy to the Java Sea horizon. With
-              only 180 exclusive units, privacy and prestige are not amenities
-              -- they are foundations.
-            </p>
-
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400/20 to-cyan-400/5 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-white font-medium">SCBD, Jakarta</p>
-                  <p className="text-xs text-[#64748B]">Prime Location</p>
-                </div>
-              </div>
-              <div className="w-px h-10 bg-white/10" />
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-500/5 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-white font-medium">2027</p>
-                  <p className="text-xs text-[#64748B]">Completion</p>
-                </div>
-              </div>
-            </div>
+              Book Private Tour
+            </a>
           </div>
 
-          {/* Right: Stats Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="glass rounded-2xl p-6 hover:bg-white/[0.08] transition-all duration-300 group cursor-default"
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 text-white/80"
+            aria-label="Toggle menu"
+          >
+            <span
+              className={`block w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`}
+            />
+            <span
+              className={`block w-6 h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+            />
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`lg:hidden absolute top-20 left-0 right-0 bg-[#0A0A0F]/95 backdrop-blur-xl border-b border-white/5 transition-all duration-300 ${
+            mobileMenuOpen
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-4 pointer-events-none"
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col gap-4">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-white/70 hover:text-cyan-400 transition-colors py-2 text-lg"
               >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400/20 to-violet-500/20 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                    <line x1="12" y1="6" x2="12" y2="6.01" />
-                    <line x1="12" y1="10" x2="12" y2="10.01" />
-                    <line x1="12" y1="14" x2="12" y2="14.01" />
-                    <line x1="12" y1="18" x2="12" y2="18.01" />
-                  </svg>
-                </div>
-                <div
-                  className="text-3xl sm:text-4xl font-bold mb-1 gradient-text"
-                  style={{ fontFamily: "var(--font-jetbrains)" }}
-                >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-2 text-center px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 font-semibold"
+            >
+              Book Private Tour
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* ═══════════════════════════════════════
+          HERO SECTION
+          ═══════════════════════════════════════ */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background layers */}
+        <div className="absolute inset-0">
+          {/* Base dark */}
+          <div className="absolute inset-0 bg-[#0A0A0F]" />
+
+          {/* Gradient orbs */}
+          <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[120px] animate-orb-1" />
+          <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[120px] animate-orb-2" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-cyan-500/5 blur-[150px]" />
+
+          {/* Dot grid overlay */}
+          <div className="absolute inset-0 dot-grid opacity-30" />
+
+          {/* Radial vignette */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#0A0A0F_70%)]" />
+        </div>
+
+        {/* Hero content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 text-center pt-32 pb-20">
+          {/* Top badge */}
+          <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-xs tracking-[0.2em] uppercase text-white/70">
+              Now accepting private viewings
+            </span>
+          </div>
+
+          {/* Main heading */}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold font-[family-name:var(--font-space-grotesk)] leading-[0.9] tracking-tight mb-8">
+            <span className="block text-white">THE</span>
+            <span className="block gradient-text py-2">PINNACLE</span>
+            <span className="block text-white/30 text-2xl sm:text-3xl md:text-4xl tracking-[0.3em] mt-4 font-light">
+              S C B D
+            </span>
+          </h1>
+
+          {/* Tagline */}
+          <p className="text-xl sm:text-2xl text-white/50 font-light max-w-xl mx-auto mb-12 leading-relaxed">
+            Elevated Living.{" "}
+            <span className="text-cyan-400">Elevated Thinking.</span>
+          </p>
+
+          {/* CTA buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
+            <a
+              href="#contact"
+              className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-lg font-semibold hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-center"
+            >
+              Schedule Private Tour
+            </a>
+            <a
+              href="#about"
+              className="px-8 py-4 rounded-full glass text-lg font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 w-full sm:w-auto text-center"
+            >
+              Explore Residences
+            </a>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {stats.map((stat) => (
+              <div key={stat.label} className="glass rounded-2xl p-6 text-center hover:bg-white/[0.08] transition-all duration-300">
+                <div className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-jetbrains)] gradient-text mb-1">
                   {stat.number}
+                  <span className="text-white/40">{stat.suffix}</span>
                 </div>
-                <div className="text-white font-semibold text-lg mb-2">{stat.label}</div>
-                <p className="text-sm text-[#64748B]">{stat.description}</p>
+                <div className="text-sm text-white/50 tracking-wide">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
 
-/* ───────────────────────────────────────────
-   UNIT EXPLORER (tabbed)
-   ─────────────────────────────────────────── */
-
-function UnitExplorer() {
-  const [activeZone, setActiveZone] = useState("sky");
-  const activeData = zones.find((z) => z.id === activeZone) || zones[0];
-
-  return (
-    <section id="units" className="relative py-20 lg:py-28 px-6 lg:px-12">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-500/[0.02] to-transparent" />
-
-      <div className="relative max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-            <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-              Unit Explorer
-            </span>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-scroll-hint">
+          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2">
+            <div className="w-1 h-3 rounded-full bg-cyan-400 animate-scroll-dot" />
           </div>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Find Your <span className="gradient-text">Elevation</span>
-          </h2>
-          <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-            Explore four distinct living tiers, each designed for a different
-            definition of luxury
-          </p>
         </div>
+      </section>
 
-        {/* Tab buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {zones.map((zone) => (
-            <button
-              key={zone.id}
-              onClick={() => setActiveZone(zone.id)}
-              className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap ${
-                activeZone === zone.id ? "text-white" : "glass text-[#94A3B8] hover:text-white hover:bg-white/[0.06]"
-              }`}
-              style={
-                activeZone === zone.id
-                  ? {
-                      background: `linear-gradient(135deg, ${zone.color}33, ${zone.color}11)`,
-                      border: `1px solid ${zone.color}66`,
-                      color: zone.color,
-                    }
-                  : undefined
-              }
-            >
-              {zone.name}
-            </button>
-          ))}
-        </div>
+      {/* ═══════════════════════════════════════
+          ABOUT SECTION
+          ═══════════════════════════════════════ */}
+      <section id="about" className="relative py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <SectionHeader
+            label="About the Building"
+            title="A New Standard of Luxury"
+            description="Rising 58 stories above Jakarta's prestigious SCBD district, The Pinnacle redefines urban living with cutting-edge architecture, biophilic design, and world-class amenities."
+          />
 
-        {/* Active unit detail card */}
-        <div className="glass rounded-3xl overflow-hidden max-w-4xl mx-auto transition-all duration-300">
-          {/* Image */}
-          <div className="relative h-56 sm:h-72 overflow-hidden">
-            <img
-              src={activeData.image}
-              alt={activeData.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-6">
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${activeData.gradient} text-white`}
+          {/* Features grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="glass rounded-2xl p-8 hover:bg-white/[0.08] transition-all duration-500 group"
               >
-                {activeData.floors}
-              </span>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 sm:p-10">
-            <h3
-              className="text-2xl sm:text-3xl font-bold mb-4"
-              style={{ fontFamily: "var(--font-space-grotesk)", color: activeData.color }}
-            >
-              {activeData.name}
-            </h3>
-
-            {/* Specs */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              {[
-                { label: "Size", value: activeData.size },
-                { label: "Bedrooms", value: activeData.bedrooms },
-                { label: "Starting Price", value: activeData.price },
-              ].map((spec) => (
-                <div
-                  key={spec.label}
-                  className="bg-white/[0.03] rounded-xl p-4 border border-white/5"
-                >
-                  <p className="text-xs text-[#64748B] mb-1">{spec.label}</p>
-                  <p
-                    className="text-sm font-semibold text-white"
-                    style={{ fontFamily: "var(--font-jetbrains)" }}
-                  >
-                    {spec.value}
-                  </p>
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Icon
+                    path={feature.icon}
+                    size={24}
+                    className="text-cyan-400"
+                  />
                 </div>
-              ))}
-            </div>
-
-            {/* Features */}
-            <h4 className="text-sm font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
-              Key Features
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
-              {activeData.features.map((feature) => (
-                <div key={feature} className="flex items-center gap-2">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={activeData.color}
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <span className="text-sm text-[#94A3B8]">{feature}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <a
-              href="#register"
-              className={`block w-full text-center py-3.5 rounded-xl bg-gradient-to-r ${activeData.gradient} text-white font-semibold hover:opacity-90 transition-opacity`}
-            >
-              Enquire About {activeData.name}
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────────────────────
-   AMENITIES
-   ─────────────────────────────────────────── */
-
-function Amenities() {
-  return (
-    <section id="amenities" className="relative py-20 lg:py-28 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/[0.02] to-transparent" />
-
-      <div className="relative">
-        {/* Header */}
-        <div className="text-center mb-16 px-6 lg:px-12">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-            <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-              World-Class Amenities
-            </span>
-          </div>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Beyond <span className="gradient-text">Expectation</span>
-          </h2>
-          <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-            Every amenity has been designed not just for comfort, but to elevate
-            the art of living
-          </p>
-        </div>
-
-        {/* Grid of cards */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {amenities.map((amenity) => (
-            <div
-              key={amenity.title}
-              className="glass rounded-2xl overflow-hidden group hover:bg-white/[0.08] transition-all duration-300"
-            >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={amenity.image}
-                  alt={amenity.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/30 to-transparent" />
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h3
-                  className="text-xl font-bold mb-2"
-                  style={{ fontFamily: "var(--font-space-grotesk)" }}
-                >
-                  {amenity.title}
-                </h3>
-                <p className="text-sm text-[#64748B] leading-relaxed">
-                  {amenity.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────────────────────
-   TECHNOLOGY
-   ─────────────────────────────────────────── */
-
-function Technology() {
-  return (
-    <section id="technology" className="relative py-20 lg:py-28 px-6 lg:px-12">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/[0.02] to-transparent" />
-
-      <div className="relative max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-            <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-              Architecture & Technology
-            </span>
-          </div>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Built for the <span className="gradient-text">Future</span>
-          </h2>
-          <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-            Where cutting-edge engineering meets sustainable design -- every
-            system in The Pinnacle is a testament to tomorrow&apos;s technology
-          </p>
-        </div>
-
-        {/* Feature Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {techFeatures.map((feature) => (
-            <div
-              key={feature.title}
-              className="group relative rounded-2xl bg-[#0F172A] border border-white/5 p-6 sm:p-8 hover:border-cyan-400/30 transition-all duration-300"
-            >
-              {/* Hover glow */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              <div className="relative">
-                {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-cyan-400/10 flex items-center justify-center mb-5 group-hover:bg-cyan-400/15 transition-colors text-cyan-400">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                  </svg>
-                </div>
-
-                <h3
-                  className="text-xl font-bold mb-3 group-hover:text-cyan-400 transition-colors"
-                  style={{ fontFamily: "var(--font-space-grotesk)" }}
-                >
+                <h3 className="text-lg font-semibold font-[family-name:var(--font-space-grotesk)] mb-3 text-white">
                   {feature.title}
                 </h3>
-
-                <p className="text-sm text-[#64748B] leading-relaxed">
+                <p className="text-white/50 text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────────────────────
-   GALLERY
-   ─────────────────────────────────────────── */
-
-function Gallery() {
-  return (
-    <section id="gallery" className="relative py-20 lg:py-28 px-6 lg:px-12">
-      <div className="relative max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-            <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-              Gallery
-            </span>
+            ))}
           </div>
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Visual <span className="gradient-text">Experience</span>
-          </h2>
-          <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-            A glimpse into the world of The Pinnacle
-          </p>
         </div>
+      </section>
 
-        {/* Masonry Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {galleryImages.map((image, index) => (
-            <div
-              key={image.title}
-              className={`relative overflow-hidden rounded-2xl group cursor-pointer ${
-                index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
-              } ${index === 4 ? "sm:col-span-2" : ""}`}
-            >
-              <div className={`relative ${index === 0 ? "h-[300px] sm:h-[500px]" : "h-[240px]"} w-full`}>
-                <img
-                  src={image.src}
-                  alt={image.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
+      {/* ═══════════════════════════════════════
+          UNITS SECTION
+          ═══════════════════════════════════════ */}
+      <section id="units" className="relative py-20 lg:py-32">
+        {/* Subtle background accent */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/[0.02] to-transparent" />
 
-                {/* Glass overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <SectionHeader
+            label="Residences"
+            title="Choose Your Elevation"
+            description="Three distinct collections, each offering a unique perspective of Jakarta's skyline and beyond."
+          />
 
-                {/* Content overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end p-6">
-                  <h3
-                    className="text-lg font-bold text-white mb-1"
-                    style={{ fontFamily: "var(--font-space-grotesk)" }}
-                  >
-                    {image.title}
-                  </h3>
-                  <p className="text-sm text-[#94A3B8]">{image.subtitle}</p>
-                </div>
-
-                {/* Glass border on hover */}
-                <div className="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/10 transition-colors duration-300" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────────────────────
-   REGISTER / CONTACT
-   ─────────────────────────────────────────── */
-
-function Register() {
-  const [submitted, setSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    budget: "",
-    zone: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
-  return (
-    <section id="register" className="relative py-20 lg:py-28 px-6 lg:px-12 overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A] via-violet-600/[0.05] to-[#0F172A]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-cyan-500/10 to-violet-600/10 blur-[100px]" />
-      </div>
-
-      <div className="relative max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span className="text-xs text-[#94A3B8] tracking-widest uppercase">
-              Limited Availability
-            </span>
-          </div>
-          <h2
-            className="text-4xl sm:text-5xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Join the <span className="gradient-text">Exclusive Waitlist</span>
-          </h2>
-          <p className="text-lg text-[#64748B] max-w-lg mx-auto">
-            Be among the first to secure your residence at The Pinnacle. Priority
-            access and preferential pricing for early registrants.
-          </p>
-        </div>
-
-        {/* Form */}
-        <div className="glass-strong rounded-3xl p-6 sm:p-10">
-          {!submitted ? (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Name */}
-              <div>
-                <label className="block text-sm text-[#94A3B8] mb-2 font-medium">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your full name"
-                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-[#475569] focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.05] transition-all"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-sm text-[#94A3B8] mb-2 font-medium">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-[#475569] focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.05] transition-all"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="block text-sm text-[#94A3B8] mb-2 font-medium">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+62 xxx xxxx xxxx"
-                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-[#475569] focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.05] transition-all"
-                />
-              </div>
-
-              {/* Budget & Floor - 2 col */}
-              <div className="grid sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm text-[#94A3B8] mb-2 font-medium">
-                    Budget Range
-                  </label>
-                  <select
-                    required
-                    value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.05] transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled className="bg-[#1E293B]">Select range</option>
-                    {budgetRanges.map((range) => (
-                      <option key={range} value={range} className="bg-[#1E293B]">{range}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm text-[#94A3B8] mb-2 font-medium">
-                    Preferred Floor Zone
-                  </label>
-                  <select
-                    required
-                    value={formData.zone}
-                    onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-white focus:outline-none focus:border-cyan-400/50 focus:bg-white/[0.05] transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled className="bg-[#1E293B]">Select zone</option>
-                    {floorZones.map((zone) => (
-                      <option key={zone} value={zone} className="bg-[#1E293B]">{zone}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Submit */}
+          {/* Unit type tabs */}
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {unitTypes.map((unit, i) => (
               <button
-                type="submit"
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold text-lg tracking-wide hover:opacity-90 transition-all hover:shadow-[0_0_40px_rgba(56,189,248,0.3)] mt-4"
+                key={unit.name}
+                onClick={() => setActiveUnit(i)}
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  activeUnit === i
+                    ? "bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/20"
+                    : "glass text-white/60 hover:text-white hover:bg-white/10"
+                }`}
               >
-                Join Exclusive Waitlist
+                {unit.name}
               </button>
+            ))}
+          </div>
 
-              <p className="text-xs text-[#475569] text-center mt-4">
-                By registering, you agree to our privacy policy. Your
-                information is kept strictly confidential.
-              </p>
-            </form>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-violet-600 flex items-center justify-center mx-auto mb-6">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+          {/* Active unit display */}
+          <div className="glass-strong rounded-3xl overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              {/* Image */}
+              <div className="relative h-64 sm:h-80 lg:h-full min-h-[400px]">
+                <img
+                  src={unitTypes[activeUnit].image}
+                  alt={unitTypes[activeUnit].name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0A0A0F]/60 hidden lg:block" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F]/80 to-transparent lg:hidden" />
+
+                {/* Badge */}
+                <div className="absolute top-6 left-6">
+                  <span
+                    className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold text-white"
+                    style={{
+                      backgroundColor: unitTypes[activeUnit].accentColor + "30",
+                      border: `1px solid ${unitTypes[activeUnit].accentColor}50`,
+                    }}
+                  >
+                    {unitTypes[activeUnit].highlight}
+                  </span>
+                </div>
               </div>
-              <h3
-                className="text-2xl font-bold mb-3 gradient-text"
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                Welcome to The Pinnacle
-              </h3>
-              <p className="text-[#94A3B8] max-w-md mx-auto">
-                Thank you for your interest,{" "}
-                <span className="text-white font-medium">{formData.name}</span>.
-                Our exclusive sales team will contact you within 24 hours with
-                priority access details.
-              </p>
-            </div>
-          )}
-        </div>
 
-        {/* Trust indicators */}
-        <div className="flex items-center justify-center gap-8 mt-8 text-[#475569] text-xs">
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
-            <span>SSL Secured</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span>Data Encrypted</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <span>GDPR Compliant</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+              {/* Details */}
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <div className="mb-2 text-xs tracking-[0.2em] uppercase text-cyan-400">
+                  {unitTypes[activeUnit].floors}
+                </div>
+                <h3 className="text-3xl lg:text-4xl font-bold font-[family-name:var(--font-space-grotesk)] mb-6">
+                  {unitTypes[activeUnit].name}
+                </h3>
 
-/* ───────────────────────────────────────────
-   FOOTER
-   ─────────────────────────────────────────── */
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="glass rounded-xl p-4">
+                    <div className="text-xs text-white/40 mb-1">Size</div>
+                    <div className="text-lg font-semibold font-[family-name:var(--font-jetbrains)]">
+                      {unitTypes[activeUnit].size}
+                    </div>
+                  </div>
+                  <div className="glass rounded-xl p-4">
+                    <div className="text-xs text-white/40 mb-1">Bedrooms</div>
+                    <div className="text-lg font-semibold font-[family-name:var(--font-jetbrains)]">
+                      {unitTypes[activeUnit].bedrooms}
+                    </div>
+                  </div>
+                </div>
 
-function Footer() {
-  return (
-    <footer className="relative py-16 px-6 lg:px-12">
-      {/* Glass divider */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
+                <ul className="space-y-3 mb-8">
+                  {unitTypes[activeUnit].features.map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-white/70">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                        style={{
+                          backgroundColor: unitTypes[activeUnit].accentColor,
+                        }}
+                      />
+                      <span className="text-sm">{f}</span>
+                    </li>
+                  ))}
+                </ul>
 
-      <div className="max-w-7xl mx-auto">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-600 flex items-center justify-center font-bold text-sm">
-                P
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="text-xs text-white/40 mb-1">
+                      Starting From
+                    </div>
+                    <div className="text-2xl font-bold gradient-text font-[family-name:var(--font-jetbrains)]">
+                      {unitTypes[activeUnit].price}
+                    </div>
+                  </div>
+                  <a
+                    href="#contact"
+                    className="px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-sm font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105"
+                  >
+                    Inquire Now
+                  </a>
+                </div>
               </div>
-              <span
-                className="text-lg font-semibold tracking-wider"
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                THE PINNACLE
-              </span>
-            </div>
-            <p className="text-sm text-[#64748B] leading-relaxed">
-              Jakarta&apos;s most exclusive residential tower in the heart of
-              SCBD. Elevated living for the extraordinary.
-            </p>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4
-              className="text-sm font-semibold uppercase tracking-wider mb-4 text-[#94A3B8]"
-              style={{ fontFamily: "var(--font-space-grotesk)" }}
-            >
-              Contact
-            </h4>
-            <div className="space-y-3 text-sm text-[#64748B]">
-              <p>SCBD Lot 12, Jl. Jend. Sudirman</p>
-              <p>South Jakarta 12190</p>
-              <p className="text-cyan-400">+62 21 5555 8888</p>
-              <p className="text-cyan-400">info@thepinnaclescbd.com</p>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4
-              className="text-sm font-semibold uppercase tracking-wider mb-4 text-[#94A3B8]"
-              style={{ fontFamily: "var(--font-space-grotesk)" }}
-            >
-              Explore
-            </h4>
-            <div className="space-y-3 text-sm">
-              <a href="#overview" className="block text-[#64748B] hover:text-white transition-colors">Overview</a>
-              <a href="#units" className="block text-[#64748B] hover:text-white transition-colors">Unit Explorer</a>
-              <a href="#amenities" className="block text-[#64748B] hover:text-white transition-colors">Amenities</a>
-              <a href="#technology" className="block text-[#64748B] hover:text-white transition-colors">Technology</a>
-              <a href="#gallery" className="block text-[#64748B] hover:text-white transition-colors">Gallery</a>
-            </div>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4
-              className="text-sm font-semibold uppercase tracking-wider mb-4 text-[#94A3B8]"
-              style={{ fontFamily: "var(--font-space-grotesk)" }}
-            >
-              Legal
-            </h4>
-            <div className="space-y-3 text-sm">
-              <a href="#" className="block text-[#64748B] hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="block text-[#64748B] hover:text-white transition-colors">Terms of Service</a>
-              <a href="#" className="block text-[#64748B] hover:text-white transition-colors">Cookie Policy</a>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/5">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-[#475569]">
-              &copy; 2026 The Pinnacle SCBD. All rights reserved. A KG Global Development.
-            </p>
-            <div className="flex items-center gap-4 text-xs text-[#475569]">
-              <span>
-                Made with{" "}
-                <span className="text-red-400">&hearts;</span> by{" "}
-                <a
-                  href="https://creativism.id"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-cyan-400 hover:text-cyan-300 transition-colors"
+      {/* ═══════════════════════════════════════
+          AMENITIES SECTION
+          ═══════════════════════════════════════ */}
+      <section id="amenities" className="relative py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <SectionHeader
+            label="World-Class Amenities"
+            title="Beyond Expectation"
+            description="Every amenity has been thoughtfully curated to elevate your daily rituals into extraordinary experiences."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {amenities.map((amenity, i) => (
+              <div
+                key={amenity.name}
+                className={`glass rounded-2xl p-8 hover:bg-white/[0.08] transition-all duration-500 group ${
+                  i === 0 ? "md:col-span-2 lg:col-span-1" : ""
+                }`}
+              >
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-violet-500/10 flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-cyan-500/10 transition-all duration-300">
+                  <Icon
+                    path={amenity.icon}
+                    size={28}
+                    className="text-cyan-400 group-hover:text-cyan-300 transition-colors"
+                  />
+                </div>
+                <h3 className="text-xl font-semibold font-[family-name:var(--font-space-grotesk)] mb-3">
+                  {amenity.name}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  {amenity.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          LOCATION SECTION
+          ═══════════════════════════════════════ */}
+      <section id="location" className="relative py-20 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-500/[0.02] to-transparent" />
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <SectionHeader
+            label="Prime Location"
+            title="The Heart of Jakarta"
+            description="Nestled in SCBD, Jakarta's most coveted address, where business prestige meets lifestyle excellence."
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Map placeholder */}
+            <div className="glass-strong rounded-3xl overflow-hidden h-[400px] lg:h-[500px] relative">
+              <img
+                src="https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=800&q=80"
+                alt="Jakarta SCBD aerial view"
+                className="absolute inset-0 w-full h-full object-cover opacity-60"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-[#0A0A0F]/40 to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="glass rounded-2xl p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse" />
+                    <span className="text-sm font-semibold text-cyan-400 tracking-wide">
+                      THE PINNACLE SCBD
+                    </span>
+                  </div>
+                  <p className="text-white/70 text-sm">
+                    Jl. Jend. Sudirman, SCBD Lot 8
+                    <br />
+                    South Jakarta 12190, Indonesia
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Nearby landmarks */}
+            <div className="space-y-4">
+              {[
+                {
+                  distance: "2 min",
+                  name: "Pacific Place Mall",
+                  type: "Shopping & Lifestyle",
+                },
+                {
+                  distance: "3 min",
+                  name: "Equity Tower & District 8",
+                  type: "Business Hub",
+                },
+                {
+                  distance: "5 min",
+                  name: "Senayan Golf Course",
+                  type: "Recreation",
+                },
+                {
+                  distance: "10 min",
+                  name: "Soekarno-Hatta Intl Airport",
+                  type: "Via Toll Road (Non-Peak)",
+                },
+                {
+                  distance: "5 min",
+                  name: "International Schools Cluster",
+                  type: "Education",
+                },
+                {
+                  distance: "3 min",
+                  name: "Pondok Indah Hospital",
+                  type: "Healthcare",
+                },
+              ].map((item) => (
+                <div
+                  key={item.name}
+                  className="glass rounded-2xl p-5 flex items-center gap-5 hover:bg-white/[0.08] transition-all duration-300 group"
                 >
-                  Creativism
-                </a>
-              </span>
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-violet-500/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <span className="text-sm font-bold font-[family-name:var(--font-jetbrains)] gradient-text">
+                      {item.distance}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-white text-sm">
+                      {item.name}
+                    </div>
+                    <div className="text-xs text-white/40">{item.type}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-    </footer>
-  );
-}
+      </section>
 
-/* ───────────────────────────────────────────
-   MAIN PAGE
-   ─────────────────────────────────────────── */
+      {/* ═══════════════════════════════════════
+          GALLERY SECTION
+          ═══════════════════════════════════════ */}
+      <section id="gallery" className="relative py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <SectionHeader
+            label="Gallery"
+            title="A Glimpse Inside"
+            description="Experience the craftsmanship, materials, and attention to detail that define every space within The Pinnacle."
+          />
 
-export default function Home() {
-  return (
-    <main className="relative">
-      <Navbar />
-      <Hero />
-      <Overview />
-      <UnitExplorer />
-      <Amenities />
-      <Technology />
-      <Gallery />
-      <Register />
-      <Footer />
-    </main>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[200px] lg:auto-rows-[240px] gap-3">
+            {galleryImages.map((img) => (
+              <div
+                key={img.alt}
+                className={`${img.span} rounded-2xl overflow-hidden relative group cursor-pointer`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                  <span className="text-sm text-white/90 font-medium">
+                    {img.alt}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          CONTACT / CTA SECTION
+          ═══════════════════════════════════════ */}
+      <section id="contact" className="relative py-20 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/[0.03] to-transparent" />
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="glass-strong rounded-3xl overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              {/* Left: CTA content */}
+              <div className="p-10 lg:p-16 flex flex-col justify-center">
+                <span className="inline-block text-xs font-semibold tracking-[0.3em] uppercase text-cyan-400 mb-4">
+                  Exclusive Access
+                </span>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] mb-6 leading-tight">
+                  <span className="gradient-text">Begin Your</span>
+                  <br />
+                  <span className="text-white">Elevated Journey</span>
+                </h2>
+                <p className="text-white/50 text-lg mb-10 leading-relaxed max-w-lg">
+                  Join an exclusive circle of discerning individuals.
+                  Schedule a private tour and discover why The Pinnacle
+                  is Jakarta&apos;s most anticipated address.
+                </p>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                      <Icon
+                        path="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        size={20}
+                        className="text-cyan-400"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-xs text-white/40">Call Us</div>
+                      <div className="text-white font-medium">
+                        +62 21 5088 8888
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                      <Icon
+                        path="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        size={20}
+                        className="text-cyan-400"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-xs text-white/40">Email</div>
+                      <div className="text-white font-medium">
+                        inquiry@thepinnacle-scbd.com
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                      <Icon
+                        path="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        size={20}
+                        className="text-cyan-400"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-xs text-white/40">
+                        Sales Gallery
+                      </div>
+                      <div className="text-white font-medium">
+                        SCBD Lot 8, South Jakarta
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Form */}
+              <div className="bg-white/[0.03] p-10 lg:p-16 border-t lg:border-t-0 lg:border-l border-white/5">
+                <h3 className="text-xl font-semibold font-[family-name:var(--font-space-grotesk)] mb-8">
+                  Request a Private Viewing
+                </h3>
+                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                  <div>
+                    <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter your full name"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.08] transition-all duration-300"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="email@example.com"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.08] transition-all duration-300"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">
+                        Phone
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="+62 812 xxx xxxx"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.08] transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">
+                      Interested In
+                    </label>
+                    <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white/60 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.08] transition-all duration-300 appearance-none">
+                      <option value="" className="bg-[#0A0A0F]">
+                        Select unit type
+                      </option>
+                      <option value="sky" className="bg-[#0A0A0F]">
+                        Sky Penthouses (Floor 50-58)
+                      </option>
+                      <option value="premium" className="bg-[#0A0A0F]">
+                        Premium Suites (Floor 30-49)
+                      </option>
+                      <option value="executive" className="bg-[#0A0A0F]">
+                        Executive Residences (Floor 10-29)
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">
+                      Message
+                    </label>
+                    <textarea
+                      rows={3}
+                      placeholder="Tell us about your preferences..."
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder:text-white/20 focus:outline-none focus:border-cyan-500/50 focus:bg-white/[0.08] transition-all duration-300 resize-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white font-semibold text-lg hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    Submit Inquiry
+                  </button>
+                  <p className="text-xs text-white/30 text-center">
+                    Your information is kept strictly confidential.
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          FOOTER
+          ═══════════════════════════════════════ */}
+      <footer className="border-t border-white/5 py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-violet-500 flex items-center justify-center text-white font-bold text-sm">
+                  TP
+                </div>
+                <div>
+                  <span className="text-lg font-bold font-[family-name:var(--font-space-grotesk)]">
+                    The Pinnacle
+                  </span>
+                  <span className="block text-[10px] tracking-[0.25em] text-white/40 uppercase">
+                    SCBD Jakarta
+                  </span>
+                </div>
+              </div>
+              <p className="text-sm text-white/40 leading-relaxed">
+                Jakarta&apos;s most exclusive 58-story residential tower.
+                Elevated living for those who demand the extraordinary.
+              </p>
+            </div>
+
+            {/* Quick links */}
+            <div>
+              <h4 className="text-sm font-semibold tracking-wide uppercase text-white/60 mb-4">
+                Explore
+              </h4>
+              <div className="space-y-3">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="block text-sm text-white/40 hover:text-cyan-400 transition-colors duration-300"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact summary */}
+            <div>
+              <h4 className="text-sm font-semibold tracking-wide uppercase text-white/60 mb-4">
+                Contact
+              </h4>
+              <div className="space-y-3 text-sm text-white/40">
+                <p>Jl. Jend. Sudirman, SCBD Lot 8</p>
+                <p>South Jakarta 12190, Indonesia</p>
+                <p className="text-cyan-400">+62 21 5088 8888</p>
+                <p className="text-cyan-400">inquiry@thepinnacle-scbd.com</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-white/30">
+              &copy; {new Date().getFullYear()} The Pinnacle SCBD. All rights
+              reserved. This is a demo website for presentation purposes.
+            </p>
+            <p className="text-xs text-white/30">
+              Made with{" "}
+              <span className="text-red-400">&hearts;</span> by{" "}
+              <a
+                href="https://creativism.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                Creativism
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
